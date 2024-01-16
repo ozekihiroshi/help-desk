@@ -1,0 +1,197 @@
+/* /assets/css/style.css */
+
+/* 共通スタイル */
+.work-list {
+    width: 80%;
+    margin: 20px auto;
+}
+
+/* 作業者一覧 */
+.work-content-form table,
+.work-staff-list table,
+.work-location-list table,
+.work-category-list table,
+.work-content-list table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.work-staff-list th,
+.work-location-list th,
+.work-category-list th,
+.work-content-list th,
+.work-staff-list td,
+.work-location-list td,
+.work-category-list td,
+.work-content-list td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+/* 作業者登録、作業場所登録、作業カテゴリ登録、作業内容登録フォーム */
+.work-staff-form,
+.work-location-form,
+.work-category-form,
+.work-content-form {
+    width: 80%;
+    margin: 20px auto;
+}
+
+.work-staff-form label,
+.work-location-form label,
+.work-category-form label,
+.work-content-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.work-staff-form input,
+.work-location-form input,
+.work-category-form input,
+.work-content-form input,
+.work-staff-form select,
+.work-location-form select,
+.work-category-form select,
+.work-content-form select,
+.work-staff-form textarea,
+.work-location-form textarea,
+.work-category-form textarea,
+.work-content-form textarea,
+.work-staff-form .button,
+.work-location-form .button,
+.work-category-form .button,
+.work-content-form .button {
+    margin-bottom: 10px;
+}
+
+/* 作業内容修正フォーム */
+.work-content-edit-form {
+    width: 100%;
+    margin: 20px auto;
+}
+
+.work-content-edit-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.work-content-edit-form input,
+.work-content-edit-form select,
+.work-content-edit-form textarea,
+.work-content-edit-form .button {
+    margin-bottom: 10px;
+}
+
+/* 修正・削除ボタン */
+.work-staff-list .button-secondary,
+.work-location-list .button-secondary,
+.work-category-list .button-secondary,
+.work-content-list .button-secondary {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.work-staff-list .button-secondary:hover,
+.work-location-list .button-secondary:hover,
+.work-category-list .button-secondary:hover,
+.work-content-list .button-secondary:hover {
+    background-color: #c82333;
+}
+
+/* Common styles for forms and buttons */
+.work-content-form,
+.work-content-edit-form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+select,
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.button {
+    padding: 10px 15px;
+    font-size: 14px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.button-primary {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+}
+
+.button-secondary {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+}
+
+/* Style for the table in work content form and edit form */
+
+.work-content-list table,
+.work-content-edit-form table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.work-content-list th,
+.work-content-list td,
+.work-content-edit-form th,
+.work-content-edit-form td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.work-content-list th,
+.work-content-edit-form th {
+    background-color: #f2f2f2;
+}
+
+/* Responsive design for small screens */
+@media screen and (max-width: 600px) {
+    .work-content-form,
+    .work-content-edit-form {
+        width: 90%;
+    }
+
+    .button {
+        width: 100%;
+    }
+
+    .work-content-list table,
+    .work-content-edit-form table {
+        overflow-x: auto;
+    }
+}
+.canvas-container {
+    position: relative;
+    width:  calc(100% - 40px);
+    height: 300px;
+    overflow: hidden;
+    margin:20px;
+}
