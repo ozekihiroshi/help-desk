@@ -1,0 +1,59 @@
+-- MariaDB dump 10.19  Distrib 10.6.12-MariaDB, for debian-linux-gnu (x86_64)
+--
+-- Host: localhost    Database: wordpress2
+-- ------------------------------------------------------
+-- Server version	10.6.12-MariaDB-0ubuntu0.22.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `wp_6_helpdesk_history`
+--
+
+DROP TABLE IF EXISTS `wp_6_helpdesk_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wp_6_helpdesk_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `timestamp` datetime DEFAULT NULL,
+  `staff_id` int(11) DEFAULT NULL,
+  `location_id` int(11) DEFAULT NULL,
+  `type_id` int(11) DEFAULT NULL,
+  `issue_details` text DEFAULT NULL,
+  `response_details` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `staff_id` (`staff_id`),
+  KEY `location_id` (`location_id`),
+  KEY `type_id` (`type_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `wp_6_helpdesk_history`
+--
+
+LOCK TABLES `wp_6_helpdesk_history` WRITE;
+/*!40000 ALTER TABLE `wp_6_helpdesk_history` DISABLE KEYS */;
+INSERT INTO `wp_6_helpdesk_history` VALUES (1,'2023-12-18 09:49:56',2,1,1,'The user requested help with connecting to the internet.','I went and checked what the problem with her connection might be, and I realized that her proxy settings were not entered correctly. I entered her proxy settings and her internet was back on'),(2,'2023-12-18 08:25:52',2,21,5,'The user who was a student needed a software installed into the computer in order for her to do her school work.','The software installation needed an admin password in order to go through and so I assisted the student with the admin password and the installation was done.'),(3,'2023-12-19 08:53:53',2,22,6,'The user had a problem logging in to her Gabs account.','I attended the client but unfortunately i was not able to help her login, her gabs account wasn\\\'t going through.'),(4,'2023-12-20 09:45:26',1,20,1,'The Principles laptop could not connect to the internet','I restarted the computer and made sure that, it can pick up the school network, then i connected to smartbots and the problem was fixed.'),(5,'2023-12-20 09:46:14',2,23,7,'The user was unable to login to their Gmail account','I realized that the problem was with the browser that she was using, so I changed the browser and she was able to access her email.'),(10,'2024-01-09 09:15:07',2,26,9,'Every time the client was trying to turn the PC on, it would turn on but would not pass the booting stage then restart.','I had to blow out the dust in the CPU because it was really dusty, after dusting out the CPU, i then proceeded to formatting it. The CPU responded well after being formatted. I then switched the user from the old domain to the new domain, then installed chrome for the user to be able to access the internet.'),(11,'2024-01-09 08:52:12',2,22,10,'The user had forgotten her password','I reset the users password using Remote Desktop.'),(12,'2024-01-10 08:00:32',2,25,10,'The user had forgotten her password.','I reset the users password by using Remote Desktop.'),(14,'2024-01-12 10:00:32',2,12,11,'The clients CPU was making a beeping sound and would not boot.','I took the CPU to the office and blowed it because it was too dusty, then I formatted the CPU after formatting the CPU it was able to boot, after booting i set it in the new domain and installed all required softwares.'),(15,'2024-01-12 10:30:25',2,12,12,'The clients computer couldn\\\'t login because it was in the old domain.','I switched the user to the new domain and installed the necessary sotwares for the user.'),(16,'2024-01-12 12:06:41',2,22,6,'The user could not log into their GABS account.','I was unable to help the user to login to gabs because it needed a change in password and the user did not know their email address.'),(18,'2024-01-17 06:58:35',1,1,1,'The user cannot connect to the Internet.','This was fixed by changing the proxy IP from 10.97.12.1 to 10.97.12.2.');
+/*!40000 ALTER TABLE `wp_6_helpdesk_history` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2024-01-17  9:49:49
