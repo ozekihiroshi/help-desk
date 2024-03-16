@@ -11,13 +11,15 @@ register_deactivation_hook(__FILE__, 'help_desk_deactivate');
 
 
 // Enqueue the style
-function enqueue_your_plugin_style() {
+function enqueue_your_plugin_style()
+{
     wp_enqueue_style('help-desk-style', plugins_url('/assets/css/style.css', __FILE__));
 }
 add_action('admin_enqueue_scripts', 'enqueue_your_plugin_style');
 
 
-function enqueue_chart_script() {
+function enqueue_chart_script()
+{
     // Get the plugin directory path
     $plugin_dir = plugin_dir_url(__FILE__);
 
@@ -28,10 +30,11 @@ function enqueue_chart_script() {
     // wp_enqueue_script('chart-script', $plugin_dir . 'assets/js/chart-script.js', array('chart-js'), null, true);
 }
 add_action('admin_enqueue_scripts', 'enqueue_chart_script');
- 
+
 
 // Process when the plugin is activated
-function help_desk_activate() {
+function help_desk_activate()
+{
     global $wpdb;
 
     // Execute SQL to create tables
@@ -52,18 +55,29 @@ function help_desk_activate() {
         category_name VARCHAR(255) NOT NULL
     ) $charset_collate;";
 
-    $sql_history = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}helpdesk_history (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        timestamp DATETIME,
-        staff_id INT,
-        location_id INT,
-        type_id INT,
-        issue_details TEXT,
-        response_details TEXT,
-        FOREIGN KEY (staff_id) REFERENCES {$wpdb->prefix}helpdesk_staff(id),
-        FOREIGN KEY (location_id) REFERENCES {$wpdb->prefix}helpdesk_location(id),
-        FOREIGN KEY (type_id) REFERENCES {$wpdb->prefix}helpdesk_type(id)
+    $sql_requesting_staff = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}helpdesk_requesting_staff (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    location_id INT,
+    staff_name VARCHAR(255) NOT NULL,
+    FOREIGN KEY (location_id) REFERENCES {$wpdb->prefix}helpdesk_location(id)
     ) $charset_collate;";
+
+
+    $sql_history = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}helpdesk_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    timestamp DATETIME,
+    staff_id INT,
+    location_id INT,
+    type_id INT,
+    issue_details TEXT,
+    response_details TEXT,
+    requester_staff_id INT,
+    FOREIGN KEY (staff_id) REFERENCES {$wpdb->prefix}helpdesk_staff(id),
+    FOREIGN KEY (location_id) REFERENCES {$wpdb->prefix}helpdesk_location(id),
+    FOREIGN KEY (type_id) REFERENCES {$wpdb->prefix}helpdesk_type(id),
+    FOREIGN KEY (requester_staff_id) REFERENCES {$wpdb->prefix}helpdesk_requesters(id)
+    ) $charset_collate;";
+
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql_staff);
     dbDelta($sql_location);
@@ -72,7 +86,8 @@ function help_desk_activate() {
 }
 
 // Process when the plugin is deactivated
-function help_desk_deactivate() {
+function help_desk_deactivate()
+{
     global $wpdb;
 
     // Execute SQL to drop tables
@@ -88,11 +103,13 @@ add_action('plugins_loaded', 'help_desk_init');
 // Add admin menu
 add_action('admin_menu', 'help_desk_add_menu');
 
-function help_desk_init() {
+function help_desk_init()
+{
     // Add any initialization process here
 }
 
-function help_desk_add_menu() {
+function help_desk_add_menu()
+{
     add_menu_page('helpdesk-dashboard', 'HelpDesk', 'manage_options', 'helpdesk-menu', 'help_desk_dashboard');
     add_submenu_page('helpdesk-menu', 'Work Content', 'Work Content', 'manage_options', 'work-content', 'help_desk_work_content');
     add_submenu_page('helpdesk-menu', 'Work Staff', 'Work Staff', 'manage_options', 'work-staff', 'help_desk_work_staff');
@@ -101,7 +118,8 @@ function help_desk_add_menu() {
 }
 
 // Dashboard
-function help_desk_dashboard() {
+function help_desk_dashboard()
+{
     // Add dashboard code
     global $wpdb;
 
@@ -139,24 +157,24 @@ function help_desk_dashboard() {
     }
 
     // Output the HTML and JavaScript for the dashboard
-    ?>
+?>
     <div class="wrap">
         <h2>Statistics</h2>
 
         <div class='canvas-container'>
-        <!-- Overall work categories ratio chart -->
-        <canvas id="categories-chart" width="300" height="150"></canvas>
+            <!-- Overall work categories ratio chart -->
+            <canvas id="categories-chart" width="300" height="150"></canvas>
         </div>
 
         <div class='canvas-container'>
-        <!-- Overall work locations ratio chart -->
-        <canvas id="locations-chart" width="300" height="150"></canvas>
+            <!-- Overall work locations ratio chart -->
+            <canvas id="locations-chart" width="300" height="150"></canvas>
         </div>
 
         <div class='canvas-container'>
-        <!-- Monthly work content count chart -->
-        <canvas id="monthly-chart" width="300" height="150"></canvas>
-        </div> 
+            <!-- Monthly work content count chart -->
+            <canvas id="monthly-chart" width="300" height="150"></canvas>
+        </div>
 
         <script>
             // Chart.js initialization
@@ -216,12 +234,13 @@ function help_desk_dashboard() {
             });
         </script>
     </div>
-    <?php
+<?php
 }
 
 
 // Work Content Page
-function help_desk_work_content() {
+function help_desk_work_content()
+{
     // Add code for the Work Content page
     // Function for handling work content
     global $wpdb;
@@ -252,18 +271,18 @@ function help_desk_work_content() {
                     'response_details' => $response_details,
                     'timestamp' => $timestamp,
                 ),
-                array('%d', '%d', '%d', '%s', '%s','%s')
+                array('%d', '%d', '%d', '%s', '%s', '%s')
             );
         } elseif (isset($_POST['delete_work_content'])) {
             // Process when the delete button is clicked
             $work_content_id = absint($_POST['delete_work_content']);
 
-	    echo '<script>';
-echo 'var confirmation = confirm("Are you sure you want to delete this?");';
-echo 'if (!confirmation) {';
-echo '  event.preventDefault();';  // 削除をキャンセル
-echo '}';
-echo '</script>';
+            echo '<script>';
+            echo 'var confirmation = confirm("Are you sure you want to delete this?");';
+            echo 'if (!confirmation) {';
+            echo '  event.preventDefault();';  // 削除をキャンセル
+            echo '}';
+            echo '</script>';
 
             $wpdb->delete(
                 $wpdb->prefix . 'helpdesk_history',
@@ -313,14 +332,14 @@ echo '</script>';
 
             echo '<tr><td><label for="issue_details">Request Details:</label></td>';
             echo '<td><textarea name="issue_details" required>' . esc_textarea($work_content->issue_details) . '</textarea></td></tr>';
-            
+
             echo '<tr><td><label for="response_details">Response Details:</label></td>';
             echo '<td><textarea name="response_details" required>' . esc_textarea($work_content->response_details) . '</textarea></td></tr>';
 
             // Input text box for timestamp
             echo '<tr><td><label for="timestamp">Timestamp:</label></td>';
             echo '<td><input type="text" name="timestamp" value="' . esc_attr($work_content->timestamp) . '"></td></tr>';
-            
+
             echo '</table>';
 
             echo '<input type="submit" name="confirm_edit_work_content" class="button button-primary" value="Edit">';
@@ -390,11 +409,11 @@ echo '</script>';
 
     echo '<tr><td><label for="response_details">Response Details:</label></td>';
     echo '<td><textarea name="response_details" required></textarea></td></tr>';
-    
+
     // Input text box for timestamp
     echo '<tr><td><label for="timestamp">Timestamp:</label></td>';
     echo '<td><input type="text" name="timestamp" value="' . esc_attr(current_time('mysql', 1)) . '"></td></tr>';
-    
+
     echo '</table>';
 
     echo '<input type="submit" name="add_work_content" class="button button-primary" value="Register">';
@@ -402,85 +421,86 @@ echo '</script>';
     echo '</div>';
 
     // Function to display work content list
-    function display_work_content_list() {
+    function display_work_content_list()
+    {
         global $wpdb;
 
-// Retrieve reference data
-    $staff_members = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_staff");
-    $locations = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_location");
-    $categories = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_type");
+        // Retrieve reference data
+        $staff_members = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_staff");
+        $locations = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_location");
+        $categories = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_type");
 
-    // ...
+        // ...
 
-    // Display search form
-    echo '<div class="work-content-search">';
-    echo '<h3>Search Work Content</h3>';
-    echo '<form method="post" action="">';
+        // Display search form
+        echo '<div class="work-content-search">';
+        echo '<h3>Search Work Content</h3>';
+        echo '<form method="post" action="">';
 
-    // Search by Staff
-    echo '<label for="staff_search">Staff:</label>';
-    echo '<select name="staff_search">';
-    echo '<option value="">All</option>';
-    foreach ($staff_members as $staff) {
-        $selected = (isset($_POST['staff_search']) && $_POST['staff_search'] == $staff->id) ? 'selected' : '';
-        echo '<option value="' . $staff->id . '" ' . $selected . '>' . esc_html($staff->name) . '</option>';
-    }
-    echo '</select>';
+        // Search by Staff
+        echo '<label for="staff_search">Staff:</label>';
+        echo '<select name="staff_search">';
+        echo '<option value="">All</option>';
+        foreach ($staff_members as $staff) {
+            $selected = (isset($_POST['staff_search']) && $_POST['staff_search'] == $staff->id) ? 'selected' : '';
+            echo '<option value="' . $staff->id . '" ' . $selected . '>' . esc_html($staff->name) . '</option>';
+        }
+        echo '</select>';
 
-    // Search by Location
-    echo '<label for="location_search">Location:</label>';
-    echo '<select name="location_search">';
-    echo '<option value="">All</option>';
-    foreach ($locations as $location) {
-        $selected = (isset($_POST['location_search']) && $_POST['location_search'] == $location->id) ? 'selected' : '';
-        echo '<option value="' . $location->id . '" ' . $selected . '>' . esc_html($location->name) . '</option>';
-    }
-    echo '</select>';
+        // Search by Location
+        echo '<label for="location_search">Location:</label>';
+        echo '<select name="location_search">';
+        echo '<option value="">All</option>';
+        foreach ($locations as $location) {
+            $selected = (isset($_POST['location_search']) && $_POST['location_search'] == $location->id) ? 'selected' : '';
+            echo '<option value="' . $location->id . '" ' . $selected . '>' . esc_html($location->name) . '</option>';
+        }
+        echo '</select>';
 
-    // Search by Category
-    echo '<label for="category_search">Category:</label>';
-    echo '<select name="category_search">';
-    echo '<option value="">All</option>';
-    foreach ($categories as $category) {
-        $selected = (isset($_POST['category_search']) && $_POST['category_search'] == $category->id) ? 'selected' : '';
-        echo '<option value="' . $category->id . '" ' . $selected . '>' . esc_html($category->category_name) . '</option>';
-    }
-    echo '</select>';
+        // Search by Category
+        echo '<label for="category_search">Category:</label>';
+        echo '<select name="category_search">';
+        echo '<option value="">All</option>';
+        foreach ($categories as $category) {
+            $selected = (isset($_POST['category_search']) && $_POST['category_search'] == $category->id) ? 'selected' : '';
+            echo '<option value="' . $category->id . '" ' . $selected . '>' . esc_html($category->category_name) . '</option>';
+        }
+        echo '</select>';
 
-    // Keyword Search
-    echo '<label for="keyword_search">Keyword:</label>';
-    echo '<input type="text" name="keyword_search" value="' . esc_attr(isset($_POST['keyword_search']) ? $_POST['keyword_search'] : '') . '">';
+        // Keyword Search
+        echo '<label for="keyword_search">Keyword:</label>';
+        echo '<input type="text" name="keyword_search" value="' . esc_attr(isset($_POST['keyword_search']) ? $_POST['keyword_search'] : '') . '">';
 
-    echo '<input type="submit" class="button button-primary" value="Search">';
-    echo '</form>';
-    echo '</div>';
-    // ...
+        echo '<input type="submit" class="button button-primary" value="Search">';
+        echo '</form>';
+        echo '</div>';
+        // ...
 
-    // Modify the SQL query based on the search parameters
-    $sql = "SELECT * FROM {$wpdb->prefix}helpdesk_history WHERE 1=1";
+        // Modify the SQL query based on the search parameters
+        $sql = "SELECT * FROM {$wpdb->prefix}helpdesk_history WHERE 1=1";
 
-    if (isset($_POST['staff_search']) && !empty($_POST['staff_search'])) {
-        $sql .= $wpdb->prepare(" AND staff_id = %d", $_POST['staff_search']);
-    }
+        if (isset($_POST['staff_search']) && !empty($_POST['staff_search'])) {
+            $sql .= $wpdb->prepare(" AND staff_id = %d", $_POST['staff_search']);
+        }
 
-    if (isset($_POST['location_search']) && !empty($_POSt['location_search'])) {
-        $sql .= $wpdb->prepare(" AND location_id = %d", $_POST['location_search']);
-    }
+        if (isset($_POST['location_search']) && !empty($_POSt['location_search'])) {
+            $sql .= $wpdb->prepare(" AND location_id = %d", $_POST['location_search']);
+        }
 
-    if (isset($_POST['category_search']) && !empty($_POST['category_search'])) {
-        $sql .= $wpdb->prepare(" AND type_id = %d", $_POST['category_search']);
-    }
+        if (isset($_POST['category_search']) && !empty($_POST['category_search'])) {
+            $sql .= $wpdb->prepare(" AND type_id = %d", $_POST['category_search']);
+        }
 
-    if (isset($_POST['keyword_search']) && !empty($_POST['keyword_search'])) {
-        $keyword = sanitize_text_field($_POST['keyword_search']);
-        $sql .= $wpdb->prepare(" AND (issue_details LIKE %s OR response_details LIKE %s)", "%$keyword%", "%$keyword%");
-    }
-
-
-                // Display the retrieved data
+        if (isset($_POST['keyword_search']) && !empty($_POST['keyword_search'])) {
+            $keyword = sanitize_text_field($_POST['keyword_search']);
+            $sql .= $wpdb->prepare(" AND (issue_details LIKE %s OR response_details LIKE %s)", "%$keyword%", "%$keyword%");
+        }
 
 
-	$records_per_page = 10; // Number of records to display per page
+        // Display the retrieved data
+
+
+        $records_per_page = 10; // Number of records to display per page
         $current_page = isset($_GET['paged']) ? absint($_GET['paged']) : 1; // Get the current page or set it to 1
 
         // Calculate the offset to retrieve the correct set of records
@@ -515,7 +535,7 @@ echo '</script>';
             echo '<td>' . esc_html(get_staff_member_name($content->staff_id)) . '</td>';
             echo '<td>' . esc_html(get_location_name($content->location_id)) . '</td>';
             echo '<td>' . esc_html(get_category_name($content->type_id)) . '</td>';
-	    echo '<td>' . custom_wrap_text(esc_html($content->issue_details), 80) . '</td>';
+            echo '<td>' . custom_wrap_text(esc_html($content->issue_details), 80) . '</td>';
             echo '<td>' . custom_wrap_text(esc_html($content->response_details), 80) . '</td>';
             echo '<td>' . esc_html($content->timestamp) . '</td>';
             echo '<td>';
@@ -534,7 +554,7 @@ echo '</script>';
         echo '</tbody>';
         echo '</table>';
 
-	// Display pagination links
+        // Display pagination links
         $total_records = $wpdb->get_var("SELECT COUNT(id) FROM {$wpdb->prefix}helpdesk_history");
         $total_pages = ceil($total_records / $records_per_page);
 
@@ -553,15 +573,16 @@ echo '</script>';
     }
 
     // Custom function to wrap text within specified width and handle existing line breaks
-    function custom_wrap_text($text, $width) {
-    // Handle existing line breaks
-    $text = nl2br($text);
-    // Wrap text to the specified width without breaking words
-    $wrapped_text = wordwrap($text, $width,"<br>", false);
-    return $wrapped_text;
+    function custom_wrap_text($text, $width)
+    {
+        // Handle existing line breaks
+        $text = nl2br($text);
+        // Wrap text to the specified width without breaking words
+        $wrapped_text = wordwrap($text, $width, "<br>", false);
+        return $wrapped_text;
     }
 
-  
+
     // Display work content list
     display_work_content_list();
 }
@@ -571,28 +592,32 @@ echo '</script>';
 // Add or modify as needed in your-plugin-name.php
 
 // Function to get staff member name by ID
-function get_staff_member_name($staff_id) {
+function get_staff_member_name($staff_id)
+{
     global $wpdb;
     $staff_member = $wpdb->get_row($wpdb->prepare("SELECT name FROM {$wpdb->prefix}helpdesk_staff WHERE id = %d", $staff_id));
     return $staff_member ? $staff_member->name : '';
 }
 
 // Function to get location name by ID
-function get_location_name($location_id) {
+function get_location_name($location_id)
+{
     global $wpdb;
     $location = $wpdb->get_row($wpdb->prepare("SELECT name FROM {$wpdb->prefix}helpdesk_location WHERE id = %d", $location_id));
     return $location ? $location->name : '';
 }
 
 // Function to get category name by ID
-function get_category_name($category_id) {
+function get_category_name($category_id)
+{
     global $wpdb;
     $category = $wpdb->get_row($wpdb->prepare("SELECT category_name FROM {$wpdb->prefix}helpdesk_type WHERE id = %d", $category_id));
     return $category ? $category->category_name : '';
 }
 
 // Work Staff Page
-function help_desk_work_staff() {
+function help_desk_work_staff()
+{
     global $wpdb;
 
     // Process when a new staff member is added
@@ -608,12 +633,12 @@ function help_desk_work_staff() {
         } elseif (isset($_POST['delete_staff'])) {
             // Process when the delete button is clicked
             $staff_id = absint($_POST['delete_staff_id']);
-	      echo '<script>';
-echo 'var confirmation = confirm("Are you sure you want to delete this?");';
-echo 'if (!confirmation) {';
-echo '  event.preventDefault();';  // 削除をキャンセル
-echo '}';
-echo '</script>';
+            echo '<script>';
+            echo 'var confirmation = confirm("Are you sure you want to delete this?");';
+            echo 'if (!confirmation) {';
+            echo '  event.preventDefault();';  // 削除をキャンセル
+            echo '}';
+            echo '</script>';
 
             $wpdb->delete(
                 $wpdb->prefix . 'helpdesk_staff',
@@ -646,7 +671,7 @@ echo '</script>';
             );
         }
     }
-    ?>
+?>
     <div class="wrap">
         <h2>Work Staff Members</h2>
 
@@ -691,14 +716,15 @@ echo '</script>';
             </tbody>
         </table>
     </div>
-    <?php
+<?php
 }
 
 
 // Work Location Page
-function help_desk_work_location() {
+function help_desk_work_location()
+{
     global $wpdb;
-    
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['add_location'])) {
             $location_name = sanitize_text_field($_POST['location_name']);
@@ -709,12 +735,12 @@ function help_desk_work_location() {
             );
         } elseif (isset($_POST['delete_location'])) {
             $location_id = absint($_POST['delete_location_id']);
-	      echo '<script>';
-echo 'var confirmation = confirm("Are you sure you want to delete this?");';
-echo 'if (!confirmation) {';
-echo '  event.preventDefault();';  // 削除をキャンセル
-echo '}';
-echo '</script>';
+            echo '<script>';
+            echo 'var confirmation = confirm("Are you sure you want to delete this?");';
+            echo 'if (!confirmation) {';
+            echo '  event.preventDefault();';  // 削除をキャンセル
+            echo '}';
+            echo '</script>';
 
             $wpdb->delete(
                 $wpdb->prefix . 'helpdesk_location',
@@ -744,7 +770,7 @@ echo '</script>';
             );
         }
     }
-    ?>
+?>
     <div class="wrap">
         <h2>Work Locations</h2>
 
@@ -790,12 +816,13 @@ echo '</script>';
             </tbody>
         </table>
     </div>
-    <?php
+<?php
 }
 
 
 // Work Category Page
-function help_desk_work_category() {
+function help_desk_work_category()
+{
     global $wpdb;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -808,12 +835,12 @@ function help_desk_work_category() {
             );
         } elseif (isset($_POST['delete_category'])) {
             $category_id = absint($_POST['delete_category_id']);
-	      echo '<script>';
-echo 'var confirmation = confirm("Are you sure you want to delete this?");';
-echo 'if (!confirmation) {';
-echo '  event.preventDefault();';  // 削除をキャンセル
-echo '}';
-echo '</script>';
+            echo '<script>';
+            echo 'var confirmation = confirm("Are you sure you want to delete this?");';
+            echo 'if (!confirmation) {';
+            echo '  event.preventDefault();';  // 削除をキャンセル
+            echo '}';
+            echo '</script>';
 
             $wpdb->delete(
                 $wpdb->prefix . 'helpdesk_type',
@@ -843,10 +870,10 @@ echo '</script>';
             );
         }
     }
-    ?>
+?>
     <div class="wrap">
         <h2>Work Categories</h2>
-        
+
         <!-- Add new work category form -->
         <form method="post" action="">
             <label for="category_name">Work Category:</label>
@@ -889,5 +916,5 @@ echo '</script>';
             </tbody>
         </table>
     </div>
-    <?php
+<?php
 }
