@@ -650,7 +650,7 @@ function get_requesting_staff_member_name($requesting_staff_id)
 {
     global $wpdb;
     $requesting_staff_member = $wpdb->get_row($wpdb->prepare("SELECT name FROM {$wpdb->prefix}helpdesk_requesting_staff WHERE id = %d", $requesting_staff_id));
-    return $requesting_staff_member ? $requesting_staff_member->name : '';
+    return $requesting_staff_member ? $requesting_staff_member->requesting_staff_name : '';
 }
 
 // Function to get location name by ID
