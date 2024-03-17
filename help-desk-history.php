@@ -287,9 +287,12 @@ function help_desk_work_content()
             $work_content_id = absint($_POST['delete_work_content']);
 
             echo '<script>';
-            echo 'var confirmation = confirm("Are you sure you want to delete this?");';
-            echo 'if (!confirmation) {';
-            echo '  event.preventDefault();';  // 削除をキャンセル
+            echo 'document.getElementById("delete_requesting_staff_button").addEventListener("click", confirmDelete);';
+            echo 'function confirmDelete(event) {';
+            echo '    var confirmation = confirm("Are you sure you want to delete this?");';
+            echo '    if (!confirmation) {';
+            echo '        event.preventDefault();';  // 削除をキャンセル
+            echo '    }';
             echo '}';
             echo '</script>';
 
@@ -596,7 +599,7 @@ function help_desk_work_content()
             echo '</form>';
             echo '<form method="post" action="">';
             echo '<input type="hidden" name="delete_work_content" value="' . $content->id . '">';
-            echo '<input type="submit" value="Delete">';
+            echo '<input type="submit" id="delete_requesting_staff_button" value="Delete">';
             echo '</form>';
             echo '</td>';
             echo '</tr>';
@@ -687,9 +690,12 @@ function help_desk_work_staff()
             // Process when the delete button is clicked
             $staff_id = absint($_POST['delete_staff_id']);
             echo '<script>';
-            echo 'var confirmation = confirm("Are you sure you want to delete this?");';
-            echo 'if (!confirmation) {';
-            echo '  event.preventDefault();';  // 削除をキャンセル
+            echo 'document.getElementById("delete_requesting_staff_button").addEventListener("click", confirmDelete);';
+            echo 'function confirmDelete(event) {';
+            echo '    var confirmation = confirm("Are you sure you want to delete this?");';
+            echo '    if (!confirmation) {';
+            echo '        event.preventDefault();';  // 削除をキャンセル
+            echo '    }';
             echo '}';
             echo '</script>';
 
@@ -756,7 +762,7 @@ function help_desk_work_staff()
                     echo "<td>";
                     echo '<form method="post" action="">';
                     echo '<input type="hidden" name="delete_staff_id" value="' . $staff->id . '">';
-                    echo '<input type="submit" name="delete_staff" value="Delete">';
+                    echo '<input type="submit" name="delete_staff" id="delete_requesting_staff_button" value="Delete">';
                     echo '</form>';
                     echo '<form method="post" action="">';
                     echo '<input type="hidden" name="edit_staff_id" value="' . $staff->id . '">';
@@ -789,9 +795,12 @@ function help_desk_work_location()
         } elseif (isset($_POST['delete_location'])) {
             $location_id = absint($_POST['delete_location_id']);
             echo '<script>';
-            echo 'var confirmation = confirm("Are you sure you want to delete this?");';
-            echo 'if (!confirmation) {';
-            echo '  event.preventDefault();';  // 削除をキャンセル
+            echo 'document.getElementById("delete_requesting_staff_button").addEventListener("click", confirmDelete);';
+            echo 'function confirmDelete(event) {';
+            echo '    var confirmation = confirm("Are you sure you want to delete this?");';
+            echo '    if (!confirmation) {';
+            echo '        event.preventDefault();';  // 削除をキャンセル
+            echo '    }';
             echo '}';
             echo '</script>';
 
@@ -856,7 +865,7 @@ function help_desk_work_location()
                     echo "<td>";
                     echo '<form method="post" action="">';
                     echo '<input type="hidden" name="delete_location_id" value="' . $location->id . '">';
-                    echo '<input type="submit" name="delete_location" value="Delete">';
+                    echo '<input type="submit" name="delete_location" id="delete_requesting_staff_button" value="Delete">';
                     echo '</form>';
                     echo '<form method="post" action="">';
                     echo '<input type="hidden" name="edit_location_id" value="' . $location->id . '">';
@@ -889,9 +898,12 @@ function help_desk_work_category()
         } elseif (isset($_POST['delete_category'])) {
             $category_id = absint($_POST['delete_category_id']);
             echo '<script>';
-            echo 'var confirmation = confirm("Are you sure you want to delete this?");';
-            echo 'if (!confirmation) {';
-            echo '  event.preventDefault();';  // 削除をキャンセル
+            echo 'document.getElementById("delete_requesting_staff_button").addEventListener("click", confirmDelete);';
+            echo 'function confirmDelete(event) {';
+            echo '    var confirmation = confirm("Are you sure you want to delete this?");';
+            echo '    if (!confirmation) {';
+            echo '        event.preventDefault();';  // 削除をキャンセル
+            echo '    }';
             echo '}';
             echo '</script>';
 
@@ -956,6 +968,7 @@ function help_desk_work_category()
                     echo "<td>";
                     echo '<form method="post" action="">';
                     echo '<input type="hidden" name="delete_category_id" value="' . $category->id . '">';
+                    echo '<input type="submit" name="delete_requesting_staff" id="delete_requesting_staff_button" value="Delete">';
                     echo '<input type="submit" name="delete_category" value="Delete">';
                     echo '</form>';
                     echo '<form method="post" action="">';
@@ -1104,3 +1117,5 @@ function help_desk_requesting_staff()
     </div>
 <?php
 }
+
+                    
