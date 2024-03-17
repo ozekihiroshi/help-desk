@@ -1022,9 +1022,42 @@ function help_desk_requesting_staff()
             </select>
             <input type="submit" name="add_requesting_staff" value="Add">
         </form>
+<!-- Display list of work categories -->
+<table class="wp-list-table widefat fixed striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Requester</th>
+                    <th>Location</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                // Retrieve the list of work categories from the database
+                $requesting_staff_members = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_requesting_staff");
 
-        <!-- Display list of requesting staff members -->
-        <!-- Similar to the display part in help_desk_work_staff function -->
+                // Display the retrieved data
+                foreach ($requesting_staff_members as $requesting_staff_member) {
+                    echo "<tr>";
+                    echo "<td>{$requesting_staff_member->id}</td>";
+                    echo "<td>{$requesting_staff_member->location_id}</td>";
+                    echo "<td>{$requesting_staff_member->requesting_staff_name}</td>";
+                    echo "<td>";
+                    echo '<form method="post" action="">';
+                    echo '<input type="hidden" name="delete_category_id" value="' . $requesting_staff_member->id . '">';
+                    echo '<input type="submit" name="delete_category" value="Delete">';
+                    echo '</form>';
+                    echo '<form method="post" action="">';
+                    echo '<input type="hidden" name="edit_category_id" value="' . $requesting_staff_member->id . '">';
+                    echo '<input type="submit" name="edit_category" value="Edit">';
+                    echo '</form>';
+                    echo "</td>";
+                    echo "</tr>";
+                }
+                ?>
+            </tbody>
+        </table>
     </div>
 <?php
 }
