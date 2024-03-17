@@ -2,7 +2,7 @@
 /*
 Plugin Name: IT Help Desk
 Description: Plugin to manage IT help desk work history.
-Version: 1.0
+Version: 1.1
 Author: Hiroshi Ozeki
 */
 
