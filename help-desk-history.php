@@ -331,11 +331,11 @@ function help_desk_work_content()
             echo '</select></td></tr>';
 
             // Dropdown menu for requesting staff
-            echo '<tr><td><label for="requesting_staff_id">Location:</label></td>';
+            echo '<tr><td><label for="requesting_staff_id">Request by:</label></td>';
             echo '<td><select name="requesting_staff_id" required>';
             foreach ($requesting_staff_members as $requesting_staff) {
                 $selected = ($requesting_staff->id === $work_content->requesting_staff_id) ? 'selected' : '';
-                echo '<option value="' . $requesting_staff->id . '" ' . $selected . '>' . esc_html($requesting_staff->name) . '</option>';
+                echo '<option value="' . $requesting_staff->id . '" ' . $selected . '>' . esc_html($requesting_staff->requesting_staff_name) . '</option>';
             }
             echo '</select></td></tr>';
 
@@ -421,7 +421,7 @@ function help_desk_work_content()
     echo '<tr><td><label for="requesting_staff_id">Request BY:</label></td>';
     echo '<td><select name="requesting_staff_id" required>';
     foreach ($requesting_staff_members as $requesting_staff) {
-        echo '<option value="' . $requesting_staff->id . '">' . esc_html($requesting_staff->name) . '</option>';
+        echo '<option value="' . $requesting_staff->id . '">' . esc_html($requesting_staff->requesting_staff_name) . '</option>';
     }
     echo '</select></td></tr>';
 
@@ -1023,7 +1023,6 @@ function help_desk_requesting_staff()
                  echo '<option value="' . $location->id . '" ' . $selected . '>' . esc_html($location->name) . '</option>';
             }
             echo '</select>';
-            var_dump($requesting_staff);
             echo '<label for="new_requesting_staff_name">New Requester Name:</label>';
             echo '<input type="text" name="new_requesting_staff_name" value="' . esc_attr($requesting_staff->requesting_staff_name) . '" required>';
             echo '<input type="submit" name="confirm_requesting_edit_staff" value="Edit">';
