@@ -95,6 +95,7 @@ function help_desk_deactivate()
     $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}helpdesk_location");
     $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}helpdesk_type");
     $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}helpdesk_history");
+    $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}helpdesk_requesting_staff");
 }
 
 // Plugin initialization
@@ -115,7 +116,11 @@ function help_desk_add_menu()
     add_submenu_page('helpdesk-menu', 'Work Staff', 'Work Staff', 'manage_options', 'work-staff', 'help_desk_work_staff');
     add_submenu_page('helpdesk-menu', 'Work Location', 'Work Location', 'manage_options', 'work-location', 'help_desk_work_location');
     add_submenu_page('helpdesk-menu', 'Work Category', 'Work Category', 'manage_options', 'work-category', 'help_desk_work_category');
+    
+    // Add submenu page for managing requesting staff
+    add_submenu_page('helpdesk-menu', 'Requesting Staff', 'Requesting Staff', 'manage_options', 'requesting-staff', 'help_desk_requesting_staff');
 }
+
 
 // Dashboard
 function help_desk_dashboard()
@@ -915,6 +920,64 @@ function help_desk_work_category()
                 ?>
             </tbody>
         </table>
+    </div>
+<?php
+}
+function help_desk_requesting_staff()
+{
+    global $wpdb;
+
+    // Process when a new requesting staff member is added
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST['add_requesting_staff'])) {
+            // Get data submitted from the form and process adding to the database
+            $requesting_staff_name = sanitize_text_field($_POST['requesting_staff_name']);
+            $location_id = absint($_POST['location_id']); // Assuming location is selected from dropdown
+            $wpdb->insert(
+                $wpdb->prefix . 'helpdesk_requesting_staff',
+                array(
+                    'location_id' => $location_id,
+                    'staff_name' => $requesting_staff_name
+                ),
+                array('%d', '%s')
+            );
+        } elseif (isset($_POST['delete_requesting_staff'])) {
+            // Process when the delete button is clicked
+            $requesting_staff_id = absint($_POST['delete_requesting_staff_id']);
+            // Process deletion
+        } elseif (isset($_POST['edit_requesting_staff'])) {
+            // Process when the edit button is clicked
+            $requesting_staff_id = absint($_POST['edit_requesting_staff_id']);
+            // Display the edit form
+        } elseif (isset($_POST['confirm_edit_requesting_staff'])) {
+            // Process when the edit is confirmed
+            $requesting_staff_id = absint($_POST['edit_requesting_staff_id']);
+            // Process edit confirmation
+        }
+    }
+?>
+    <div class="wrap">
+        <h2>Requesting Staff Members</h2>
+
+        <!-- Add new requesting staff member form -->
+        <form method="post" action="">
+            <label for="requesting_staff_name">Requesting Staff Member Name:</label>
+            <input type="text" name="requesting_staff_name" required>
+            <label for="location_id">Location:</label>
+            <select name="location_id">
+                <?php
+                // Retrieve the list of locations from the database
+                $locations = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_location");
+                foreach ($locations as $location) {
+                    echo '<option value="' . $location->id . '">' . $location->name . '</option>';
+                }
+                ?>
+            </select>
+            <input type="submit" name="add_requesting_staff" value="Add">
+        </form>
+
+        <!-- Display list of requesting staff members -->
+        <!-- Similar to the display part in help_desk_work_staff function -->
     </div>
 <?php
 }
