@@ -31,6 +31,11 @@ function enqueue_chart_script()
 }
 add_action('admin_enqueue_scripts', 'enqueue_chart_script');
 
+function enqueue_custom_scripts() {
+    // JavaScript ファイルの登録
+    wp_enqueue_script('confirm-delete-script', plugin_dir_url( __FILE__ ) . 'asset/js/confirmDelete.js', array('jquery'), '1.0', true);
+}
+add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
 
 // Process when the plugin is activated
 function help_desk_activate()
@@ -285,17 +290,7 @@ function help_desk_work_content()
         } elseif (isset($_POST['delete_work_content'])) {
             // Process when the delete button is clicked
             $work_content_id = absint($_POST['delete_work_content']);
-
-            echo '<script>';
-            echo 'document.getElementById("delete_requesting_staff_button").addEventListener("click", confirmDelete);';
-            echo 'function confirmDelete(event) {';
-            echo '    var confirmation = confirm("Are you sure you want to delete this?");';
-            echo '    if (!confirmation) {';
-            echo '        event.preventDefault();';  // 削除をキャンセル
-            echo '    }';
-            echo '}';
-            echo '</script>';
-
+            
             $wpdb->delete(
                 $wpdb->prefix . 'helpdesk_history',
                 array('id' => $work_content_id),
@@ -597,7 +592,7 @@ function help_desk_work_content()
             echo '<input type="hidden" name="edit_work_content" value="' . $content->id . '">';
             echo '<input type="submit" value="Edit">';
             echo '</form>';
-            echo '<form method="post" action="">';
+            echo '<form method="post" action="" onsubmit="confirmDelete(event)">'; // formタグで囲
             echo '<input type="hidden" name="delete_work_content" value="' . $content->id . '">';
             echo '<input type="submit" id="delete_requesting_staff_button" value="Delete">';
             echo '</form>';
@@ -689,15 +684,6 @@ function help_desk_work_staff()
         } elseif (isset($_POST['delete_staff'])) {
             // Process when the delete button is clicked
             $staff_id = absint($_POST['delete_staff_id']);
-            echo '<script>';
-            echo 'document.getElementById("delete_requesting_staff_button").addEventListener("click", confirmDelete);';
-            echo 'function confirmDelete(event) {';
-            echo '    var confirmation = confirm("Are you sure you want to delete this?");';
-            echo '    if (!confirmation) {';
-            echo '        event.preventDefault();';  // 削除をキャンセル
-            echo '    }';
-            echo '}';
-            echo '</script>';
 
             $wpdb->delete(
                 $wpdb->prefix . 'helpdesk_staff',
@@ -760,9 +746,9 @@ function help_desk_work_staff()
                     echo "<td>{$staff->id}</td>";
                     echo "<td>{$staff->name}</td>";
                     echo "<td>";
-                    echo '<form method="post" action="">';
+                    echo '<form method="post" action="" onsubmit="confirmDelete(event)">'; // formタグで囲
                     echo '<input type="hidden" name="delete_staff_id" value="' . $staff->id . '">';
-                    echo '<input type="submit" name="delete_staff" id="delete_requesting_staff_button" value="Delete">';
+                    echo '<input type="submit" name="delete_staff" value="Delete">';
                     echo '</form>';
                     echo '<form method="post" action="">';
                     echo '<input type="hidden" name="edit_staff_id" value="' . $staff->id . '">';
@@ -794,15 +780,6 @@ function help_desk_work_location()
             );
         } elseif (isset($_POST['delete_location'])) {
             $location_id = absint($_POST['delete_location_id']);
-            echo '<script>';
-            echo 'document.getElementById("delete_requesting_staff_button").addEventListener("click", confirmDelete);';
-            echo 'function confirmDelete(event) {';
-            echo '    var confirmation = confirm("Are you sure you want to delete this?");';
-            echo '    if (!confirmation) {';
-            echo '        event.preventDefault();';  // 削除をキャンセル
-            echo '    }';
-            echo '}';
-            echo '</script>';
 
             $wpdb->delete(
                 $wpdb->prefix . 'helpdesk_location',
@@ -863,9 +840,9 @@ function help_desk_work_location()
                     echo "<td>{$location->id}</td>";
                     echo "<td>{$location->name}</td>";
                     echo "<td>";
-                    echo '<form method="post" action="">';
+                    echo '<form method="post" action="" onsubmit="confirmDelete(event)">'; // formタグで囲
                     echo '<input type="hidden" name="delete_location_id" value="' . $location->id . '">';
-                    echo '<input type="submit" name="delete_location" id="delete_requesting_staff_button" value="Delete">';
+                    echo '<input type="submit" name="delete_location" value="Delete">';
                     echo '</form>';
                     echo '<form method="post" action="">';
                     echo '<input type="hidden" name="edit_location_id" value="' . $location->id . '">';
@@ -897,16 +874,7 @@ function help_desk_work_category()
             );
         } elseif (isset($_POST['delete_category'])) {
             $category_id = absint($_POST['delete_category_id']);
-            echo '<script>';
-            echo 'document.getElementById("delete_requesting_staff_button").addEventListener("click", confirmDelete);';
-            echo 'function confirmDelete(event) {';
-            echo '    var confirmation = confirm("Are you sure you want to delete this?");';
-            echo '    if (!confirmation) {';
-            echo '        event.preventDefault();';  // 削除をキャンセル
-            echo '    }';
-            echo '}';
-            echo '</script>';
-
+           
             $wpdb->delete(
                 $wpdb->prefix . 'helpdesk_type',
                 array('id' => $category_id),
@@ -966,9 +934,9 @@ function help_desk_work_category()
                     echo "<td>{$category->id}</td>";
                     echo "<td>{$category->category_name}</td>";
                     echo "<td>";
-                    echo '<form method="post" action="">';
+                    echo '<form method="post" action="" onsubmit="confirmDelete(event)">'; // formタグで囲
                     echo '<input type="hidden" name="delete_category_id" value="' . $category->id . '">';
-                    echo '<input type="submit" name="delete_requesting_staff" id="delete_requesting_staff_button" value="Delete">';
+                    echo '<input type="submit" name="delete_requesting_staff" value="Delete">';
                     echo '<input type="submit" name="delete_category" value="Delete">';
                     echo '</form>';
                     echo '<form method="post" action="">';
@@ -1090,14 +1058,6 @@ function help_desk_requesting_staff()
                     echo "<td>{$requesting_staff_member->requesting_staff_name}</td>";
                     echo "<td>{$location_name}</td>";
                     echo "<td>";
-                    echo '<script>';
-                    echo 'function confirmDelete(event) {';
-                    echo '    var confirmation = confirm("Are you sure you want to delete this?");';
-                    echo '    if (!confirmation) {';
-                    echo '        event.preventDefault();';  // 削除をキャンセル
-                    echo '    }';
-                    echo '}';
-                    echo '</script>';
                     echo '<form method="post" action="" onsubmit="confirmDelete(event)">'; // formタグで囲
                     echo '<input type="hidden" name="delete_requesting_staff_id" value="' . $requesting_staff_member->id . '">';
                     echo '<input type="submit" name="delete_requesting_staff" value="Delete">';
