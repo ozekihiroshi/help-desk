@@ -380,7 +380,7 @@ function help_desk_work_content()
                 array(
                     'staff_id' => $staff_id,
                     'location_id' => $location_id,
-                    `requesting_staff_id` => $requesting_staff_id,
+                    'requesting_staff_id' => $requesting_staff_id,
                     'type_id' => $category_id,
                     'issue_details' => $issue_details,
                     'response_details' => $response_details,
