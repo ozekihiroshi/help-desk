@@ -1017,7 +1017,7 @@ function help_desk_requesting_staff()
             echo '<input type="text" name="edit_requesting_staff_id" value="' . $requesting_staff_id . '">';
              // Dropdown menu for staff members
             echo '<label for="location_id">Location:</label>';
-            echo '<select name="location_id" required>';
+            echo '<select name="new_location_id" required>';
             foreach ($locations as $location) {
                  $selected = ($location->id === $requesting_staff->location_id) ? 'selected' : '';
                  echo '<option value="' . $location->id . '" ' . $selected . '>' . esc_html($location->name) . '</option>';
@@ -1036,6 +1036,7 @@ function help_desk_requesting_staff()
                 array('location_id' => $new_location_id),
                 array('requesting_staff_name' => $new_requesting_staff_name),
                 array('id' => $requesting_staff_id),
+                array('%d'),
                 array('%s'),
                 array('%d')
             );
