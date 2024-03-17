@@ -1076,12 +1076,12 @@ function help_desk_requesting_staff()
                     echo "<td>{$location_name}</td>";
                     echo "<td>";
                     echo '<form method="post" action="">';
-                    echo '<input type="hidden" name="delete_category_id" value="' . $requesting_staff_member->id . '">';
-                    echo '<input type="submit" name="delete_category" value="Delete">';
+                    echo '<input type="hidden" name="delete_requesting_staff_id" value="' . $requesting_staff_member->id . '">';
+                    echo '<input type="submit" name="delete_requesting_staff" value="Delete">';
                     echo '</form>';
                     echo '<form method="post" action="">';
-                    echo '<input type="hidden" name="edit_category_id" value="' . $requesting_staff_member->id . '">';
-                    echo '<input type="submit" name="edit_category" value="Edit">';
+                    echo '<input type="hidden" name="edit_requesting_staff_id" value="' . $requesting_staff_member->id . '">';
+                    echo '<input type="submit" name="edit_requesting_staff" value="Edit">';
                     echo '</form>';
                     echo "</td>";
                     echo "</tr>";
