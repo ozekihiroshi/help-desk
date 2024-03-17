@@ -1024,7 +1024,7 @@ function help_desk_requesting_staff()
             }
             echo '</select>';
             echo '<label for="new_requesting_staff_name">New Staff Member Name:</label>';
-            echo '<input type="text" name="new_requesting_staff_name" value="' . esc_attr($requesting_staff->requesting_staff_ame) . '" required>';
+            echo '<input type="text" name="new_requesting_staff_name" value="' . esc_attr($requesting_staff->requesting_staff_name) . '" required>';
             echo '<input type="submit" name="confirm_requesting_edit_staff" value="Edit">';
             echo '</form>';
         } elseif (isset($_POST['confirm_edit_requesting_staff'])) {
