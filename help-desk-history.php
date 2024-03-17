@@ -117,7 +117,7 @@ function help_desk_add_menu()
     add_submenu_page('helpdesk-menu', 'Work Staff', 'Work Staff', 'manage_options', 'work-staff', 'help_desk_work_staff');
     add_submenu_page('helpdesk-menu', 'Work Location', 'Work Location', 'manage_options', 'work-location', 'help_desk_work_location');
     add_submenu_page('helpdesk-menu', 'Work Category', 'Work Category', 'manage_options', 'work-category', 'help_desk_work_category');
-    
+
     // Add submenu page for managing requesting staff
     add_submenu_page('helpdesk-menu', 'Requesting Staff', 'Requesting Staff', 'manage_options', 'requesting-staff', 'help_desk_requesting_staff');
 }
@@ -255,8 +255,8 @@ function help_desk_work_content()
     $staff_members = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_staff");
     $locations = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_location");
     $categories = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_type");
-    $requesting_staff_members= $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_requesting_staff");
-    
+    $requesting_staff_members = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_requesting_staff");
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['add_work_content'])) {
             // Get data submitted from the form
@@ -388,10 +388,9 @@ function help_desk_work_content()
                     'timestamp' => $timestamp,
                 ),
                 array('id' => $work_content_id),
-                array('%d', '%d', '%d','%d','%s', '%s', '%s'),
+                array('%d', '%d', '%d', '%d', '%s', '%s', '%s'),
                 array('%d')
             );
-
         }
     }
 
@@ -585,7 +584,7 @@ function help_desk_work_content()
             echo '<td>' . $content->id . '</td>';
             echo '<td>' . esc_html(get_staff_member_name($content->staff_id)) . '</td>';
             echo '<td>' . esc_html(get_location_name($content->location_id)) . '</td>';
-            echo '<td>' . esc_html(get_requesting_staff_member_name($content->requesting_staff_id)) . '</td>'; 
+            echo '<td>' . esc_html(get_requesting_staff_member_name($content->requesting_staff_id)) . '</td>';
             echo '<td>' . esc_html(get_category_name($content->type_id)) . '</td>';
             echo '<td>' . custom_wrap_text(esc_html($content->issue_details), 80) . '</td>';
             echo '<td>' . custom_wrap_text(esc_html($content->response_details), 80) . '</td>';
@@ -994,9 +993,12 @@ function help_desk_requesting_staff()
             // Process when the delete button is clicked
             $requesting_staff_id = absint($_POST['delete_requesting_staff_id']);
             echo '<script>';
-            echo 'var confirmation = confirm("Are you sure you want to delete this?");';
-            echo 'if (!confirmation) {';
-            echo '  event.preventDefault();';  // 削除をキャンセル
+            echo 'document.getElementById("delete_requesting_staff_button").addEventListener("click", confirmDelete);';
+            echo 'function confirmDelete(event) {';
+            echo '    var confirmation = confirm("Are you sure you want to delete this?");';
+            echo '    if (!confirmation) {';
+            echo '        event.preventDefault();';  // 削除をキャンセル
+            echo '    }';
             echo '}';
             echo '</script>';
 
@@ -1017,12 +1019,12 @@ function help_desk_requesting_staff()
             echo '<h3>Edit Staff Member</h3>';
             echo '<form method="post" action="">';
             echo '<input type="text" name="edit_requesting_staff_id" value="' . $requesting_staff_id . '">';
-             // Dropdown menu for staff members
+            // Dropdown menu for staff members
             echo '<label for="location_id">Location:</label>';
             echo '<select name="new_location_id" required>';
             foreach ($locations as $location) {
-                 $selected = ($location->id === $requesting_staff->location_id) ? 'selected' : '';
-                 echo '<option value="' . $location->id . '" ' . $selected . '>' . esc_html($location->name) . '</option>';
+                $selected = ($location->id === $requesting_staff->location_id) ? 'selected' : '';
+                echo '<option value="' . $location->id . '" ' . $selected . '>' . esc_html($location->name) . '</option>';
             }
             echo '</select>';
             echo '<label for="new_requesting_staff_name">New Requester Name:</label>';
@@ -1037,7 +1039,7 @@ function help_desk_requesting_staff()
                 $wpdb->prefix . 'helpdesk_requesting_staff',
                 array('location_id' => $new_location_id, 'requesting_staff_name' => $new_requesting_staff_name),
                 array('id' => $requesting_staff_id),
-                array('%d','%s'),
+                array('%d', '%s'),
                 array('%d')
             );
         }
@@ -1062,8 +1064,8 @@ function help_desk_requesting_staff()
             </select>
             <input type="submit" name="add_requesting_staff" value="Add">
         </form>
-<!-- Display list of work categories -->
-<table class="wp-list-table widefat fixed striped">
+        <!-- Display list of work categories -->
+        <table class="wp-list-table widefat fixed striped">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -1087,7 +1089,7 @@ function help_desk_requesting_staff()
                     echo "<td>";
                     echo '<form method="post" action="">';
                     echo '<input type="hidden" name="delete_requesting_staff_id" value="' . $requesting_staff_member->id . '">';
-                    echo '<input type="submit" name="delete_requesting_staff" value="Delete">';
+                    echo '<input type="submit" name="delete_requesting_staff" id="delete_requesting_staff_button" value="Delete">';
                     echo '</form>';
                     echo '<form method="post" action="">';
                     echo '<input type="hidden" name="edit_requesting_staff_id" value="' . $requesting_staff_member->id . '">';
