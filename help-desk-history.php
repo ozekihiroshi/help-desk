@@ -35,7 +35,7 @@ function enqueue_custom_scripts() {
     // JavaScript ファイルの登録
     wp_enqueue_script('confirm-delete-script', plugin_dir_url( __FILE__ ) . 'assets/js/confirmDelete.js', array('jquery'), '1.0', true);
 }
-add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
+add_action('admin_enqueue_scripts', 'enqueue_custom_scripts');
 
 // Process when the plugin is activated
 function help_desk_activate()
