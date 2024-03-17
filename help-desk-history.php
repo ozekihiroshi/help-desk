@@ -1009,7 +1009,7 @@ function help_desk_requesting_staff()
             // Process when the edit button is clicked
             $requesting_staff_id = absint($_POST['edit_requesting_staff_id']);
             $requesting_staff = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}helpdesk_requesting_staff WHERE id = {$requesting_staff_id}");
-            $locations_data = $wpdb->get_results("SELECT location_id, COUNT(*) as count FROM {$wpdb->prefix}helpdesk_history GROUP BY location_id");
+            $locations_data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_location GROUP BY location_id");
 
             // Display the edit form
             echo '<h3>Edit Staff Member</h3>';
