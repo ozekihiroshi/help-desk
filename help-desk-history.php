@@ -58,7 +58,7 @@ function help_desk_activate()
     $sql_requesting_staff = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}helpdesk_requesting_staff (
     id INT AUTO_INCREMENT PRIMARY KEY,
     location_id INT,
-    staff_name VARCHAR(255) NOT NULL,
+    requesting_staff_name VARCHAR(255) NOT NULL,
     FOREIGN KEY (location_id) REFERENCES {$wpdb->prefix}helpdesk_location(id)
     ) $charset_collate;";
 
@@ -68,19 +68,20 @@ function help_desk_activate()
     timestamp DATETIME,
     staff_id INT,
     location_id INT,
+    requesting_staff_id INT,
     type_id INT,
     issue_details TEXT,
     response_details TEXT,
-    requester_staff_id INT,
     FOREIGN KEY (staff_id) REFERENCES {$wpdb->prefix}helpdesk_staff(id),
     FOREIGN KEY (location_id) REFERENCES {$wpdb->prefix}helpdesk_location(id),
     FOREIGN KEY (type_id) REFERENCES {$wpdb->prefix}helpdesk_type(id),
-    FOREIGN KEY (requester_staff_id) REFERENCES {$wpdb->prefix}helpdesk_requesters(id)
+    FOREIGN KEY (requesting_staff_id) REFERENCES {$wpdb->prefix}helpdesk_requesting_staff(id)
     ) $charset_collate;";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql_staff);
     dbDelta($sql_location);
+    dbDelta($sql_requesting_staff);
     dbDelta($sql_type);
     dbDelta($sql_history);
 }
@@ -254,12 +255,14 @@ function help_desk_work_content()
     $staff_members = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_staff");
     $locations = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_location");
     $categories = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_type");
-
+    $requesting_staff_members= $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_requesting_staff");
+    
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['add_work_content'])) {
             // Get data submitted from the form
             $staff_id = absint($_POST['staff_id']);
             $location_id = absint($_POST['location_id']);
+            $requesting_staff_id = absint($_POST['requesting_staff_id']);
             $category_id = absint($_POST['category_id']);
             $issue_details = sanitize_text_field($_POST['issue_details']);
             $response_details = sanitize_text_field($_POST['response_details']);
@@ -270,6 +273,7 @@ function help_desk_work_content()
                 $wpdb->prefix . 'helpdesk_history',
                 array(
                     'staff_id' => $staff_id,
+                    `requesting_staff_id` => $requesting_staff_id,
                     'location_id' => $location_id,
                     'type_id' => $category_id,
                     'issue_details' => $issue_details,
@@ -326,6 +330,15 @@ function help_desk_work_content()
             }
             echo '</select></td></tr>';
 
+            // Dropdown menu for requesting staff
+            echo '<tr><td><label for="requesting_staff_id">Location:</label></td>';
+            echo '<td><select name="requesting_staff_id" required>';
+            foreach ($requesting_staff_members as $requesting_staff) {
+                $selected = ($requesting_staff->id === $work_content->requesting_staff_id) ? 'selected' : '';
+                echo '<option value="' . $requesting_staff->id . '" ' . $selected . '>' . esc_html($requesting_staff->name) . '</option>';
+            }
+            echo '</select></td></tr>';
+
             // Dropdown menu for work categories
             echo '<tr><td><label for="category_id">Category:</label></td>';
             echo '<td><select name="category_id" required>';
@@ -340,6 +353,7 @@ function help_desk_work_content()
 
             echo '<tr><td><label for="response_details">Response Details:</label></td>';
             echo '<td><textarea name="response_details" required>' . esc_textarea($work_content->response_details) . '</textarea></td></tr>';
+
 
             // Input text box for timestamp
             echo '<tr><td><label for="timestamp">Timestamp:</label></td>';
@@ -356,6 +370,7 @@ function help_desk_work_content()
             $staff_id = absint($_POST['staff_id']);
             $location_id = absint($_POST['location_id']);
             $category_id = absint($_POST['category_id']);
+            $requesting_staff_id = absint($_POST['requesting_staff_id']);
             $issue_details = sanitize_text_field($_POST['issue_details']);
             $response_details = sanitize_text_field($_POST['response_details']);
             $timestamp = isset($_POST['timestamp']) ? sanitize_text_field($_POST['timestamp']) : current_time('mysql', 1);
@@ -365,6 +380,7 @@ function help_desk_work_content()
                 array(
                     'staff_id' => $staff_id,
                     'location_id' => $location_id,
+                    `requesting_staff_id` => $requesting_staff_id,
                     'type_id' => $category_id,
                     'issue_details' => $issue_details,
                     'response_details' => $response_details,
@@ -401,6 +417,14 @@ function help_desk_work_content()
     }
     echo '</select></td></tr>';
 
+    // Dropdown menu for requesting_staff
+    echo '<tr><td><label for="requesting_staff_id">Location:</label></td>';
+    echo '<td><select name="requesting_staff_id" required>';
+    foreach ($requesting_staff_members as $requesting_staff) {
+        echo '<option value="' . $requesting_staff->id . '">' . esc_html($requesting_staff->name) . '</option>';
+    }
+    echo '</select></td></tr>';
+
     // Dropdown menu for work categories
     echo '<tr><td><label for="category_id">Category:</label></td>';
     echo '<td><select name="category_id" required>';
@@ -434,8 +458,8 @@ function help_desk_work_content()
         $staff_members = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_staff");
         $locations = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_location");
         $categories = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_type");
-
-        // ...
+        // Get data for requesting staff
+        $requesting_staff_members = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}helpdesk_requesting_staff");
 
         // Display search form
         echo '<div class="work-content-search">';
@@ -462,6 +486,17 @@ function help_desk_work_content()
         }
         echo '</select>';
 
+
+        // Search by requesting_Staff
+        echo '<label for="requesting_staff_search">Staff:</label>';
+        echo '<select name="requesting_staff_search">';
+        echo '<option value="">All</option>';
+        foreach ($requesting_staff_members as $requesting_staff_member) {
+            $selected = (isset($_POST['requesting_staff_search']) && $_POST['requesting_staff_search'] == $requesting_staff->id) ? 'selected' : '';
+            echo '<option value="' . $requesting_staff_member->id . '" ' . $selected . '>' . esc_html($requesting_staff_member->name) . '</option>';
+        }
+        echo '</select>';
+
         // Search by Category
         echo '<label for="category_search">Category:</label>';
         echo '<select name="category_search">';
@@ -471,6 +506,7 @@ function help_desk_work_content()
             echo '<option value="' . $category->id . '" ' . $selected . '>' . esc_html($category->category_name) . '</option>';
         }
         echo '</select>';
+
 
         // Keyword Search
         echo '<label for="keyword_search">Keyword:</label>';
@@ -492,8 +528,16 @@ function help_desk_work_content()
             $sql .= $wpdb->prepare(" AND location_id = %d", $_POST['location_search']);
         }
 
+        if (isset($_POST['requesting_staff_search']) && !empty($_POSt['requesting_staff_search'])) {
+            $sql .= $wpdb->prepare(" AND requesting_staff_id = %d", $_POST['requesting_staff_search']);
+        }
+
         if (isset($_POST['category_search']) && !empty($_POST['category_search'])) {
             $sql .= $wpdb->prepare(" AND type_id = %d", $_POST['category_search']);
+        }
+
+        if (isset($_POST['requesting_staff_search']) && !empty($_POST['requesting_staff_search'])) {
+            $sql .= $wpdb->prepare(" AND staff_id = %d", $_POST['requesting_staff_search']);
         }
 
         if (isset($_POST['keyword_search']) && !empty($_POST['keyword_search'])) {
@@ -503,7 +547,6 @@ function help_desk_work_content()
 
 
         // Display the retrieved data
-
 
         $records_per_page = 10; // Number of records to display per page
         $current_page = isset($_GET['paged']) ? absint($_GET['paged']) : 1; // Get the current page or set it to 1
@@ -525,6 +568,7 @@ function help_desk_work_content()
         echo '<th>ID</th>';
         echo '<th>Staff</th>';
         echo '<th>Location</th>';
+        echo '<th>Requested By</th>';
         echo '<th>Category</th>';
         echo '<th>Issue Details</th>';
         echo '<th>Response Details</th>';
@@ -539,6 +583,7 @@ function help_desk_work_content()
             echo '<td>' . $content->id . '</td>';
             echo '<td>' . esc_html(get_staff_member_name($content->staff_id)) . '</td>';
             echo '<td>' . esc_html(get_location_name($content->location_id)) . '</td>';
+            echo '<td>' . esc_html(get_requesting_staff_member_name($content->requesting_staff_id)) . '</td>'; 
             echo '<td>' . esc_html(get_category_name($content->type_id)) . '</td>';
             echo '<td>' . custom_wrap_text(esc_html($content->issue_details), 80) . '</td>';
             echo '<td>' . custom_wrap_text(esc_html($content->response_details), 80) . '</td>';
@@ -570,10 +615,6 @@ function help_desk_work_content()
         }
         echo '</div>';
 
-
-
-
-
         echo '</div>';
     }
 
@@ -586,7 +627,6 @@ function help_desk_work_content()
         $wrapped_text = wordwrap($text, $width, "<br>", false);
         return $wrapped_text;
     }
-
 
     // Display work content list
     display_work_content_list();
@@ -602,6 +642,13 @@ function get_staff_member_name($staff_id)
     global $wpdb;
     $staff_member = $wpdb->get_row($wpdb->prepare("SELECT name FROM {$wpdb->prefix}helpdesk_staff WHERE id = %d", $staff_id));
     return $staff_member ? $staff_member->name : '';
+}
+
+function get_requesting_staff_member_name($requsting_staff_id)
+{
+    global $wpdb;
+    $requesting_staff_member = $wpdb->get_row($wpdb->prepare("SELECT name FROM {$wpdb->prefix}helpdesk_requesting_staff WHERE id = %d", $requesting_staff_id));
+    return $requesting_staff_member ? $requesting_staff_member->name : '';
 }
 
 // Function to get location name by ID
