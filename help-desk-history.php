@@ -1033,18 +1033,11 @@ function help_desk_requesting_staff()
             $new_location_id = sanitize_text_field($_POST['new_location_id']);
             $wpdb->update(
                 $wpdb->prefix . 'helpdesk_requesting_staff',
-                array('location_id' => $new_location_id),
-                array('requesting_staff_name' => $new_requesting_staff_name),
+                array('location_id' => $new_location_id, 'requesting_staff_name' => $new_requesting_staff_name),
                 array('id' => $requesting_staff_id),
-                array('%d'),
-                array('%s'),
+                array('%d','%s'),
                 array('%d')
             );
-            var_dump($new_location_id);
-            var_dump($new_requesting_staff_name);
-            var_dump($requesting_staff_id);
-
-            exit;
         }
     }
 ?>
