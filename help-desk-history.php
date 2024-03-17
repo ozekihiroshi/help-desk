@@ -979,9 +979,11 @@ function help_desk_requesting_staff()
         if (isset($_POST['add_requesting_staff'])) {
             // Get data submitted from the form and process adding to the database
             $requesting_staff_name = sanitize_text_field($_POST['requesting_staff_name']);
+            $location_id = absint($_POST['location_id']); // Assuming location is selected from dropdown
             $wpdb->insert(
                 $wpdb->prefix . 'helpdesk_requesting_staff',
                 array(
+                    'location_id' => $location_id,
                     'requesting_staff_name' => $requesting_staff_name
                 ),
                 array('%d', '%s')
