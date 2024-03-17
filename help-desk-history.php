@@ -392,7 +392,6 @@ function help_desk_work_content()
                 array('%d')
             );
 
-            exit;
         }
     }
 
@@ -647,7 +646,7 @@ function get_staff_member_name($staff_id)
     return $staff_member ? $staff_member->name : '';
 }
 
-function get_requesting_staff_member_name($requsting_staff_id)
+function get_requesting_staff_member_name($requesting_staff_id)
 {
     global $wpdb;
     $requesting_staff_member = $wpdb->get_row($wpdb->prepare("SELECT name FROM {$wpdb->prefix}helpdesk_requesting_staff WHERE id = %d", $requesting_staff_id));
