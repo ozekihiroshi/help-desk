@@ -1040,6 +1040,11 @@ function help_desk_requesting_staff()
                 array('%s'),
                 array('%d')
             );
+            var_dump($new_location_id);
+            var_dump($new_requesting_staff_name);
+            var_dump($new_location_id);
+
+            exit;
         }
     }
 ?>
