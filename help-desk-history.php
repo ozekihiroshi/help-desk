@@ -999,7 +999,7 @@ function help_desk_requesting_staff()
             echo '</script>';
 
             $wpdb->delete(
-                $wpdb->prefix . 'helpdesk_staff',
+                $wpdb->prefix . 'helpdesk_requesting_staff',
                 array('id' => $requesting_staff_id),
                 array('%d')
             );
