@@ -375,6 +375,7 @@ function help_desk_work_content()
             $response_details = sanitize_text_field($_POST['response_details']);
             $timestamp = isset($_POST['timestamp']) ? sanitize_text_field($_POST['timestamp']) : current_time('mysql', 1);
 
+            var_dump($requesting_staff_id);
             $wpdb->update(
                 $wpdb->prefix . 'helpdesk_history',
                 array(
@@ -390,6 +391,8 @@ function help_desk_work_content()
                 array('%d', '%d', '%d','%d','%s', '%s', '%s'),
                 array('%d')
             );
+
+            exit;
         }
     }
 
