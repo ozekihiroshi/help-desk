@@ -387,7 +387,7 @@ function help_desk_work_content()
                     'timestamp' => $timestamp,
                 ),
                 array('id' => $work_content_id),
-                array('%d', '%d', '%d', '%s', '%s', '%s'),
+                array('%d', '%d', '%d','%d','%s', '%s', '%s'),
                 array('%d')
             );
         }
@@ -528,8 +528,8 @@ function help_desk_work_content()
             $sql .= $wpdb->prepare(" AND location_id = %d", $_POST['location_search']);
         }
 
-        if (isset($_POST['requesting_staff_search']) && !empty($_POSt['requesting_staff_search'])) {
-            $sql .= $wpdb->prepare(" AND requesting_staff_id = %d", $_POST['requesting_staff_search']);
+        if (isset($_POST['staff_search']) && !empty($_POSt['staff_search'])) {
+            $sql .= $wpdb->prepare(" AND staff_id = %d", $_POST['staff_search']);
         }
 
         if (isset($_POST['category_search']) && !empty($_POST['category_search'])) {
@@ -537,7 +537,7 @@ function help_desk_work_content()
         }
 
         if (isset($_POST['requesting_staff_search']) && !empty($_POST['requesting_staff_search'])) {
-            $sql .= $wpdb->prepare(" AND staff_id = %d", $_POST['requesting_staff_search']);
+            $sql .= $wpdb->prepare(" AND requesting_staff_id = %d", $_POST['requesting_staff_search']);
         }
 
         if (isset($_POST['keyword_search']) && !empty($_POST['keyword_search'])) {
