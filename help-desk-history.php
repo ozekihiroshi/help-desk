@@ -1039,10 +1039,11 @@ function help_desk_requesting_staff()
 
                 // Display the retrieved data
                 foreach ($requesting_staff_members as $requesting_staff_member) {
+                    $location_name = get_location_name($requesting_staff_member->location_id); // Assuming a function get_location_name is defined to get location name
                     echo "<tr>";
                     echo "<td>{$requesting_staff_member->id}</td>";
-                    echo "<td>{$requesting_staff_member->location_id}</td>";
                     echo "<td>{$requesting_staff_member->requesting_staff_name}</td>";
+                    echo "<td>{$location_name}</td>";
                     echo "<td>";
                     echo '<form method="post" action="">';
                     echo '<input type="hidden" name="delete_category_id" value="' . $requesting_staff_member->id . '">';
