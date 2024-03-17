@@ -278,14 +278,14 @@ function help_desk_work_content()
                 $wpdb->prefix . 'helpdesk_history',
                 array(
                     'staff_id' => $staff_id,
-                    `requesting_staff_id` => $requesting_staff_id,
+                    'requesting_staff_id' => $requesting_staff_id,
                     'location_id' => $location_id,
                     'type_id' => $category_id,
                     'issue_details' => $issue_details,
                     'response_details' => $response_details,
                     'timestamp' => $timestamp,
                 ),
-                array('%d','%d' ,'%d', '%d', '%s', '%s', '%s')
+                array('%d','%d','%d','%d','%s', '%s', '%s')
             );
         } elseif (isset($_POST['delete_work_content'])) {
             // Process when the delete button is clicked
