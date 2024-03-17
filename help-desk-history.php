@@ -33,7 +33,7 @@ add_action('admin_enqueue_scripts', 'enqueue_chart_script');
 
 function enqueue_custom_scripts() {
     // JavaScript ファイルの登録
-    wp_enqueue_script('confirm-delete-script', plugin_dir_url( __FILE__ ) . 'assets/js/confirmDelete.js', array('jquery'), '1.0', true);
+    wp_enqueue_script('confirm-delete-script', plugin_dir_url(__FILE__) . 'assets/js/confirmDelete.js', array(), '1.0', true);
 }
 add_action('admin_enqueue_scripts', 'enqueue_custom_scripts');
 
