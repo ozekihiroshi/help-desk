@@ -1025,7 +1025,7 @@ function help_desk_requesting_staff()
             echo '</select>';
             echo '<label for="new_requesting_staff_name">New Requester Name:</label>';
             echo '<input type="text" name="new_requesting_staff_name" value="' . esc_attr($requesting_staff->requesting_staff_name) . '" required>';
-            echo '<input type="submit" name="confirm_requesting_edit_staff" value="Edit">';
+            echo '<input type="submit" name="confirm_edit_requesting_staff" value="Edit">';
             echo '</form>';
         } elseif (isset($_POST['confirm_edit_requesting_staff'])) {
             $requesting_staff_id = absint($_POST['edit_requesting_staff_id']);
