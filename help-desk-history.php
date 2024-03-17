@@ -1042,7 +1042,7 @@ function help_desk_requesting_staff()
             );
             var_dump($new_location_id);
             var_dump($new_requesting_staff_name);
-            var_dump($new_location_id);
+            var_dump($requesting_staff_id);
 
             exit;
         }
