@@ -285,7 +285,7 @@ function help_desk_work_content()
                     'response_details' => $response_details,
                     'timestamp' => $timestamp,
                 ),
-                array('%d', '%d', '%d', '%s', '%s', '%s')
+                array('%d','%d' ,'%d', '%d', '%s', '%s', '%s')
             );
         } elseif (isset($_POST['delete_work_content'])) {
             // Process when the delete button is clicked
