@@ -991,15 +991,45 @@ function help_desk_requesting_staff()
         } elseif (isset($_POST['delete_requesting_staff'])) {
             // Process when the delete button is clicked
             $requesting_staff_id = absint($_POST['delete_requesting_staff_id']);
+            echo '<script>';
+            echo 'var confirmation = confirm("Are you sure you want to delete this?");';
+            echo 'if (!confirmation) {';
+            echo '  event.preventDefault();';  // 削除をキャンセル
+            echo '}';
+            echo '</script>';
+
+            $wpdb->delete(
+                $wpdb->prefix . 'helpdesk_staff',
+                array('id' => $requesting_staff_id),
+                array('%d')
+            );
+            // Process when the delete button is clicked
             // Process deletion
         } elseif (isset($_POST['edit_requesting_staff'])) {
             // Process when the edit button is clicked
             $requesting_staff_id = absint($_POST['edit_requesting_staff_id']);
+            $requesting_staff = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}helpdesk_requesting_staff WHERE id = {$requesting_staff_id}");
+
             // Display the edit form
+            echo '<h3>Edit Staff Member</h3>';
+            echo '<form method="post" action="">';
+            echo '<input type="text" name="edit_requesting_staff_id" value="' . $requesting_staff_id . '">';
+            echo '<label for="new_requesting_staff_name">New Staff Member Name:</label>';
+            echo '<input type="text" name="new_requesting_staff_name" value="' . esc_attr($requesting_staff->name) . '" required>';
+            echo '<input type="submit" name="confirm_requesting_edit_staff" value="Edit">';
+            echo '</form>';
         } elseif (isset($_POST['confirm_edit_requesting_staff'])) {
-            // Process when the edit is confirmed
             $requesting_staff_id = absint($_POST['edit_requesting_staff_id']);
-            // Process edit confirmation
+            $new_requesting_staff_name = sanitize_text_field($_POST['new_requesting_staff_name']);
+            $new_location_id = sanitize_text_field($_POST['new_location_id']);
+            $wpdb->update(
+                $wpdb->prefix . 'helpdesk_requesting_staff',
+                array('location_id' => $new_location_id),
+                array('requesting_staff_name' => $new_requesting_staff_name),
+                array('id' => $requesting_staff_id),
+                array('%s'),
+                array('%d')
+            );
         }
     }
 ?>
