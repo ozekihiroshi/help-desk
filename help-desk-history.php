@@ -1009,11 +1009,20 @@ function help_desk_requesting_staff()
             // Process when the edit button is clicked
             $requesting_staff_id = absint($_POST['edit_requesting_staff_id']);
             $requesting_staff = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}helpdesk_requesting_staff WHERE id = {$requesting_staff_id}");
+            $locations_data = $wpdb->get_results("SELECT location_id, COUNT(*) as count FROM {$wpdb->prefix}helpdesk_history GROUP BY location_id");
 
             // Display the edit form
             echo '<h3>Edit Staff Member</h3>';
             echo '<form method="post" action="">';
             echo '<input type="text" name="edit_requesting_staff_id" value="' . $requesting_staff_id . '">';
+             // Dropdown menu for staff members
+            echo '<label for="staff_id">Staff:</label>';
+            echo '<select name="staff_id" required>';
+            foreach ($locations_data as $location) {
+                 $selected = ($location->id === $requesting_staff->location_id) ? 'selected' : '';
+                 echo '<option value="' . $location->id . '" ' . $selected . '>' . esc_html($location->name) . '</option>';
+            }
+            echo '</select>';
             echo '<label for="new_requesting_staff_name">New Staff Member Name:</label>';
             echo '<input type="text" name="new_requesting_staff_name" value="' . esc_attr($requesting_staff->name) . '" required>';
             echo '<input type="submit" name="confirm_requesting_edit_staff" value="Edit">';
