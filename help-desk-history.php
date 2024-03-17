@@ -418,7 +418,7 @@ function help_desk_work_content()
     echo '</select></td></tr>';
 
     // Dropdown menu for requesting_staff
-    echo '<tr><td><label for="requesting_staff_id">Location:</label></td>';
+    echo '<tr><td><label for="requesting_staff_id">Request BY:</label></td>';
     echo '<td><select name="requesting_staff_id" required>';
     foreach ($requesting_staff_members as $requesting_staff) {
         echo '<option value="' . $requesting_staff->id . '">' . esc_html($requesting_staff->name) . '</option>';
