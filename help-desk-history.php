@@ -1006,9 +1006,11 @@ function help_desk_requesting_staff()
             // Process when the delete button is clicked
             $requesting_staff_id = absint($_POST['delete_requesting_staff_id']);
             echo '<script>';
-            echo 'function confirmDelete() {';
+            echo 'function confirmDelete(event) {';
             echo '    var confirmation = confirm("Are you sure you want to delete this?");';
-            echo '    return confirmation;';
+            echo '    if (!confirmation) {';
+            echo '        event.preventDefault();';  // 削除をキャンセル
+            echo '    }';
             echo '}';
             echo '</script>';
 
@@ -1097,7 +1099,7 @@ function help_desk_requesting_staff()
                     echo "<td>{$requesting_staff_member->requesting_staff_name}</td>";
                     echo "<td>{$location_name}</td>";
                     echo "<td>";
-                    echo '<form method="post" action="" onsubmit="return confirmDelete()">'; // formタグで囲
+                    echo '<form method="post" action="" onsubmit="confirmDelete(event)">'; // formタグで囲
                     echo '<input type="hidden" name="delete_requesting_staff_id" value="' . $requesting_staff_member->id . '">';
                     echo '<input type="submit" name="delete_requesting_staff" value="Delete">';
                     echo '</form>';
@@ -1114,5 +1116,3 @@ function help_desk_requesting_staff()
     </div>
 <?php
 }
-
-                    
