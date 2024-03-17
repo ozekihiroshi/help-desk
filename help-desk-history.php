@@ -492,8 +492,8 @@ function help_desk_work_content()
         echo '<select name="requesting_staff_search">';
         echo '<option value="">All</option>';
         foreach ($requesting_staff_members as $requesting_staff_member) {
-            $selected = (isset($_POST['requesting_staff_search']) && $_POST['requesting_staff_search'] == $requesting_staff->id) ? 'selected' : '';
-            echo '<option value="' . $requesting_staff_member->id . '" ' . $selected . '>' . esc_html($requesting_staff_member->name) . '</option>';
+            $selected = (isset($_POST['requesting_staff_search']) && $_POST['requesting_staff_search'] == $requesting_staff_member->id) ? 'selected' : '';
+            echo '<option value="' . $requesting_staff_member->id . '" ' . $selected . '>' . esc_html($requesting_staff_member->requesting_staff_name) . '</option>';
         }
         echo '</select>';
 
