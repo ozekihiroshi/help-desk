@@ -488,7 +488,7 @@ function help_desk_work_content()
 
 
         // Search by requesting_Staff
-        echo '<label for="requesting_staff_search">Staff:</label>';
+        echo '<label for="requesting_staff_search">Requester:</label>';
         echo '<select name="requesting_staff_search">';
         echo '<option value="">All</option>';
         foreach ($requesting_staff_members as $requesting_staff_member) {
@@ -979,12 +979,10 @@ function help_desk_requesting_staff()
         if (isset($_POST['add_requesting_staff'])) {
             // Get data submitted from the form and process adding to the database
             $requesting_staff_name = sanitize_text_field($_POST['requesting_staff_name']);
-            $location_id = absint($_POST['location_id']); // Assuming location is selected from dropdown
             $wpdb->insert(
                 $wpdb->prefix . 'helpdesk_requesting_staff',
                 array(
-                    'location_id' => $location_id,
-                    'staff_name' => $requesting_staff_name
+                    'requesting_staff_name' => $requesting_staff_name
                 ),
                 array('%d', '%s')
             );
