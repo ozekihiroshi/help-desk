@@ -77,6 +77,7 @@ function help_desk_activate()
     type_id INT,
     issue_details TEXT,
     response_details TEXT,
+    requester_type TINYINT(1) DEFAULT 0,
     FOREIGN KEY (staff_id) REFERENCES {$wpdb->prefix}helpdesk_staff(id),
     FOREIGN KEY (location_id) REFERENCES {$wpdb->prefix}helpdesk_location(id),
     FOREIGN KEY (type_id) REFERENCES {$wpdb->prefix}helpdesk_type(id),
@@ -193,7 +194,53 @@ function help_desk_dashboard()
                 labels: <?php echo json_encode($categories_labels); ?>,
                 datasets: [{
                     data: <?php echo json_encode($categories_values); ?>,
-                    backgroundColor: ['red', 'blue', 'green', 'yellow', 'orange'],
+			    backgroundColor: [
+				    'red',
+                                    'blue',
+                                    'green',
+                                    'yellow',
+                                    'orange',
+                                    'purple',
+                                    'cyan',
+                                    'magenta',
+                                    'lime',
+                                    'pink',
+                                    'teal',
+                                    'brown',
+                                    'gray',
+                                    'indigo',
+				    'gold',
+				     'rgba(255, 99, 132, 0.6)',  // Red 60%
+                'rgba(54, 162, 235, 0.6)',  // Blue 60%
+                'rgba(75, 192, 192, 0.6)',  // Green 60%
+                'rgba(255, 205, 86, 0.6)',  // Yellow 60%
+                'rgba(255, 159, 64, 0.6)',  // Orange 60%
+                'rgba(153, 102, 255, 0.6)', // Purple 60%
+                'rgba(75, 192, 192, 0.6)',  // Cyan 60%
+                'rgba(255, 0, 255, 0.6)',   // Magenta 60%
+                'rgba(50, 205, 50, 0.6)',   // Lime 60%
+                'rgba(255, 105, 180, 0.6)', // Pink 60%
+                'rgba(0, 128, 128, 0.6)',   // Teal 60%
+                'rgba(165, 42, 42, 0.6)',   // Brown 60%
+                'rgba(128, 128, 128, 0.6)', // Gray 60%
+                'rgba(75, 0, 130, 0.6)',    // Indigo 60%
+                'rgba(255, 215, 0, 0.6)',   // Gold 60%
+		'rgba(255, 99, 132, 0.4)',  // Red 40%
+                'rgba(54, 162, 235, 0.4)',  // Blue 40%
+                'rgba(75, 192, 192, 0.4)',  // Green 40%
+                'rgba(255, 205, 86, 0.4)',  // Yellow 40%
+                'rgba(255, 159, 64, 0.4)',  // Orange 40%
+                'rgba(153, 102, 255, 0.4)', // Purple 40%
+                'rgba(75, 192, 192, 0.4)',  // Cyan 40%
+                'rgba(255, 0, 255, 0.4)',   // Magenta 40%
+                'rgba(50, 205, 50, 0.4)',   // Lime 40%
+                'rgba(255, 105, 180, 0.4)', // Pink 40%
+                'rgba(0, 128, 128, 0.4)',   // Teal 40%
+                'rgba(165, 42, 42, 0.4)',   // Brown 40%
+                'rgba(128, 128, 128, 0.4)', // Gray 40%
+                'rgba(75, 0, 130, 0.4)',    // Indigo 40%
+                'rgba(255, 215, 0, 0.4)'    // Gold 40%
+			    ],
                 }]
             };
 
@@ -201,7 +248,53 @@ function help_desk_dashboard()
                 labels: <?php echo json_encode($locations_labels); ?>,
                 datasets: [{
                     data: <?php echo json_encode($locations_values); ?>,
-                    backgroundColor: ['red', 'blue', 'green', 'yellow', 'orange'],
+		    backgroundColor: [
+				    'red',
+                                    'blue',
+                                    'green',
+                                    'yellow',
+                                    'orange',
+                                    'purple',
+                                    'cyan',
+                                    'magenta',
+                                    'lime',
+                                    'pink',
+                                    'teal',
+                                    'brown',
+                                    'gray',
+                                    'indigo',
+				    'gold',
+				     'rgba(255, 99, 132, 0.6)',  // Red 60%
+                'rgba(54, 162, 235, 0.6)',  // Blue 60%
+                'rgba(75, 192, 192, 0.6)',  // Green 60%
+                'rgba(255, 205, 86, 0.6)',  // Yellow 60%
+                'rgba(255, 159, 64, 0.6)',  // Orange 60%
+                'rgba(153, 102, 255, 0.6)', // Purple 60%
+                'rgba(75, 192, 192, 0.6)',  // Cyan 60%
+                'rgba(255, 0, 255, 0.6)',   // Magenta 60%
+                'rgba(50, 205, 50, 0.6)',   // Lime 60%
+                'rgba(255, 105, 180, 0.6)', // Pink 60%
+                'rgba(0, 128, 128, 0.6)',   // Teal 60%
+                'rgba(165, 42, 42, 0.6)',   // Brown 60%
+                'rgba(128, 128, 128, 0.6)', // Gray 60%
+                'rgba(75, 0, 130, 0.6)',    // Indigo 60%
+		'rgba(255, 215, 0, 0.6)',   // Gold 60%
+		'rgba(255, 99, 132, 0.4)',  // Red 40%
+                'rgba(54, 162, 235, 0.4)',  // Blue 40%
+                'rgba(75, 192, 192, 0.4)',  // Green 40%
+                'rgba(255, 205, 86, 0.4)',  // Yellow 40%
+                'rgba(255, 159, 64, 0.4)',  // Orange 40%
+                'rgba(153, 102, 255, 0.4)', // Purple 40%
+                'rgba(75, 192, 192, 0.4)',  // Cyan 40%
+                'rgba(255, 0, 255, 0.4)',   // Magenta 40%
+                'rgba(50, 205, 50, 0.4)',   // Lime 40%
+                'rgba(255, 105, 180, 0.4)', // Pink 40%
+                'rgba(0, 128, 128, 0.4)',   // Teal 40%
+                'rgba(165, 42, 42, 0.4)',   // Brown 40%
+                'rgba(128, 128, 128, 0.4)', // Gray 40%
+                'rgba(75, 0, 130, 0.4)',    // Indigo 40%
+                'rgba(255, 215, 0, 0.4)'    // Gold 40%
+			    ],
                 }]
             };
 
@@ -273,6 +366,10 @@ function help_desk_work_content()
             $response_details = sanitize_text_field($_POST['response_details']);
             $timestamp = isset($_POST['timestamp']) ? sanitize_text_field($_POST['timestamp']) : current_time('mysql', 1);
 
+	    // Determine requester_type based on the requesting_staff_id
+        $requesting_staff_name = $wpdb->get_var($wpdb->prepare("SELECT requesting_staff_name FROM {$wpdb->prefix}helpdesk_requesting_staff WHERE id = %d", $requesting_staff_id));
+        $requester_type = (strpos($requesting_staff_name, 'student-') === 0) ? 1 : 0;
+
             // Register data in the database
             $wpdb->insert(
                 $wpdb->prefix . 'helpdesk_history',
@@ -284,8 +381,9 @@ function help_desk_work_content()
                     'issue_details' => $issue_details,
                     'response_details' => $response_details,
                     'timestamp' => $timestamp,
+		      'requester_type' => $requester_type,
                 ),
-                array('%d','%d','%d','%d','%s', '%s', '%s')
+		array('%d','%d','%d','%d','%s', '%s', '%s', '%d')
             );
         } elseif (isset($_POST['delete_work_content'])) {
             // Process when the delete button is clicked
